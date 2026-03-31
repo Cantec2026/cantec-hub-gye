@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CANTEC · Hub de Dashboards</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cantec-gold: #F5A623;
+    --cantec-dark: #0D0D0D;
+    --cantec-surface: #141414;
+    --cantec-card: #1C1C1C;
+    --cantec-border: #2A2A2A;
+    --cantec-muted: #555;
+    --cantec-text: #E8E8E8;
+    --cantec-sub: #888;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cantec-dark);
+    color: var(--cantec-text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,166,35,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,166,35,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .logo-badge {
+    background: var(--cantec-gold);
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .header-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--cantec-sub);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 6vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    margin-bottom: 8px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .title span {
+    color: var(--cantec-gold);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--cantec-sub);
+    font-weight: 300;
+    margin-bottom: 48px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--cantec-gold), transparent);
+    margin-bottom: 40px;
+    animation: expandWidth 0.8s 0.3s ease both;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--cantec-card);
+    border: 1px solid var(--cantec-border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--cantec-gold);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(245,166,35,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,166,35,0.15);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card:nth-child(1) { animation-delay: 0.35s; }
+  .card:nth-child(2) { animation-delay: 0.45s; }
+  .card:nth-child(3) { animation-delay: 0.55s; }
+  .card:nth-child(4) { animation-delay: 0.65s; }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(245,166,35,0.1);
+    border: 1px solid rgba(245,166,35,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .card-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cantec-gold);
+    font-family: 'Syne', sans-serif;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--cantec-sub);
+    font-weight: 300;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .card-arrow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--cantec-gold);
+    font-weight: 500;
+    margin-top: 4px;
+    transition: gap 0.2s;
+  }
+
+  .card:hover .card-arrow { gap: 10px; }
+
+  .arrow-line {
+    width: 20px;
+    height: 1px;
+    background: var(--cantec-gold);
+    transition: width 0.2s;
+  }
+
+  .card:hover .arrow-line { width: 28px; }
+
+  /* Footer */
+  .footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--cantec-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    animation: fadeUp 0.6s 0.8s ease both;
+    opacity: 0;
+  }
+
+  .footer-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--cantec-muted);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-brand span { color: var(--cantec-gold); }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--cantec-muted);
+    font-weight: 300;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes expandWidth {
+    from { transform: scaleX(0); transform-origin: left; }
+    to { transform: scaleX(1); transform-origin: left; }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .container { padding: 32px 16px 60px; }
+    .grid { grid-template-columns: 1fr; }
+    .footer { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo-badge">CANTEC</div>
+    <div class="header-label">Centro de Reportería</div>
+  </div>
+
+  <h1 class="title">Hub de<br><span>Dashboards</span></h1>
+  <p class="subtitle">Acceso unificado a los reportes de gestión de operaciones.</p>
+
+  <div class="divider"></div>
+
+  <div class="grid">
+
+    <a class="card" href="https://app.powerbi.com/view?r=eyJrIjoiZmQ2Yjg5ZTEtODZjYS00MDVhLTgxYmQtMjMyZWQxOTYxOGE5IiwidCI6IjYyNzZjMmZkLTY3OWEtNDEwOC05MTg1LTU2ZWQ5MjViMDM3MiIsImMiOjR9" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">📋</div>
+      <div class="card-tag">Reclamos</div>
+      <div class="card-title">Novedades Reclamos Corp</div>
+      <div class="card-desc">Seguimiento de novedades y reclamos corporativos en tiempo real.</div>
+      <div class="card-arrow"><div class="arrow-line"></div> Abrir dashboard</div>
+    </a>
+
+    <a class="card" href="https://app.powerbi.com/view?r=eyJrIjoiZmZlOWI0ODAtMzMyNy00ODhhLWE3YjctMDU2NDJhMjJkY2NkIiwidCI6IjYyNzZjMmZkLTY3OWEtNDEwOC05MTg1LTU2ZWQ5MjViMDM3MiIsImMiOjR9" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">🏢</div>
+      <div class="card-tag">Corporativo</div>
+      <div class="card-title">INB Front Corporativo</div>
+      <div class="card-desc">Dashboard front corporativo. Incluye Cartas Regularización y Back Negocios.</div>
+      <div class="card-arrow"><div class="arrow-line"></div> Abrir dashboard</div>
+    </a>
+
+    <a class="card" href="https://app.powerbi.com/view?r=eyJrIjoiZjE1NWMwZGYtZTJiMi00YzYyLWJhNzctYTI4NTMwZmVlYjA4IiwidCI6IjYyNzZjMmZkLTY3OWEtNDEwOC05MTg1LTU2ZWQ5MjViMDM3MiIsImMiOjR9" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">📊</div>
+      <div class="card-tag">Back Office</div>
+      <div class="card-title">Back Fijo Corporativo</div>
+      <div class="card-desc">Indicadores de gestión back fijo a nivel corporativo.</div>
+      <div class="card-arrow"><div class="arrow-line"></div> Abrir dashboard</div>
+    </a>
+
+    <a class="card" href="https://app.powerbi.com/view?r=eyJrIjoiNjAxMmNlYmUtNTNkYS00MGI4LWJiOWEtNGEyOGE2YzRjYjc2IiwidCI6IjYyNzZjMmZkLTY3OWEtNDEwOC05MTg1LTU2ZWQ5MjViMDM3MiIsImMiOjR9" target="_blank" rel="noopener noreferrer">
+      <div class="card-icon">💰</div>
+      <div class="card-tag">Facturación</div>
+      <div class="card-title">Back Facturación, Caja & Negocios</div>
+      <div class="card-desc">Control de facturación, caja y métricas de negocios en un solo reporte.</div>
+      <div class="card-arrow"><div class="arrow-line"></div> Abrir dashboard</div>
+    </a>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-brand">CANTEC <span>·</span> Estrategia</div>
+    <div class="footer-note">© 2026 CANTEC. Todos los derechos reservados.</div>
+  </div>
+
+</div>
+</body>
+</html>
